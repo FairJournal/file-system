@@ -1,7 +1,7 @@
 {
   "name": "@fairjournal/file-system",
   "version": "0.0.1",
-  "description": "File System on top of non-mutable data storage",
+  "description": "File System on the top of immutable storages",
   "main": "dist/index.min.js",
   "types": "dist/src/index.d.ts",
   "scripts": {
@@ -63,7 +63,6 @@
   },
   "dependencies": {
     "crypto-js": "^4.1.1",
-    "merkle-tree-binary": "^2.0.1",
     "merkletreejs": "^0.3.10",
     "tonstorage-cli": "^1.0.3"
   }
