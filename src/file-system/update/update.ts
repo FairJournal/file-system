@@ -77,6 +77,22 @@ export class Update {
    * Returns sha256 of data to sign
    */
   getSignData(): string {
+    if (!this.id) {
+      throw new Error('Id is required')
+    }
+
+    if (!this.projectName) {
+      throw new Error('Project name is required')
+    }
+
+    if (!this.actions.length) {
+      throw new Error('Actions are required')
+    }
+
+    if (!this.userAddress) {
+      throw new Error('User address is required')
+    }
+
     const updateData: UpdateData = {
       id: this.id,
       projectName: this.projectName,
