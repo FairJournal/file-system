@@ -20,6 +20,5 @@ export interface FileSystemOptions {
   /**
    * Check signature algorithm
    */
-  // todo pass full item (dir or file) and check signature with all available data. optimize data signature check
   checkSignature: ((name: string, ownerAddress: string, signature: string) => boolean) | 'ton'
 }

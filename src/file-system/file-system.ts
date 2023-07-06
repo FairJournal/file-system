@@ -119,6 +119,15 @@ export class FileSystem {
   }
 
   /**
+   * Checks if user exists
+   *
+   * @param userAddress Address of the user
+   */
+  isUserExists(userAddress: string): boolean {
+    return this._userUpdateMap[userAddress] !== undefined
+  }
+
+  /**
    * Add update to file system
    */
   addUpdate(updateData: UpdateDataSigned): void {
@@ -181,13 +190,22 @@ export class FileSystem {
     this._updates[updateData.userAddress].push(updateData)
     this._userUpdateMap[update.getUserAddress()] = update.getId()
 
-    // todo check that user already registered for actions except add user
     for (const action of update.getActions()) {
+      // check that user performs actions only after he was registered
+      if (action.actionType !== ActionType.addUser && !this.isUserExists(update.getUserAddress())) {
+        throw new Error(`User with address "${update.getUserAddress()}" is not registered. Action can't be performed`)
+      }
+
       if (action.actionType === ActionType.addDirectory) {
         this.addDirectory(update, action.actionData as AddDirectoryActionData)
       } else if (action.actionType === ActionType.addUser) {
-        // todo check that user from update is the same that should be added
-        this.addUser(update.getId(), action.actionData as AddUserActionData)
+        const actionData = action.actionData as AddUserActionData
+
+        if (update.getUserAddress() !== actionData.userAddress) {
+          throw new Error('Update user address is not the same as user address from action data')
+        }
+
+        this.addUser(update.getId(), actionData)
       } else if (action.actionType === ActionType.addFile) {
         this.addFile(update, action.actionData as AddFileActionData)
       }
@@ -213,13 +231,10 @@ export class FileSystem {
 
   /**
    * Upload file system metadata to the storage
+   *
+   * @param options Upload options
    */
-  async upload(options?: UploadOptions): Promise<ReferencedItem> {
-    if (!options?.uploadData) {
-      // todo optimize this behavior
-      throw new Error('Upload data is not implemented')
-    }
-
+  async upload(options: UploadOptions): Promise<ReferencedItem> {
     const uploadData = options.uploadData
     const meta = this.exportMeta()
     assertTree(meta.tree)
@@ -259,25 +274,19 @@ export class FileSystem {
     return uploadData(JSON.stringify(meta))
   }
 
-  async download(reference: string, options?: DownloadOptions): Promise<void> {
-    if (!options) {
-      // todo optimize this behavior
-      throw new Error('Download options are required')
-    }
-
-    if (!options?.downloadData) {
-      // todo optimize this behavior
-      throw new Error('Download data method is not implemented')
-    }
-
+  /**
+   * Download file system metadata from the storage
+   *
+   * @param reference Root reference
+   * @param options Download options
+   */
+  async download(reference: string, options: DownloadOptions): Promise<void> {
     // 1 - download packed meta
     const downloadData = options.downloadData
     const metaString = await downloadData({ reference })
     assertJson(metaString)
     const metaObject = JSON.parse(metaString) as ExportMeta
     assertExportMeta(metaObject)
-    // todo download meta by reference, validate it and parse
-    // todo check the list of required users and download their updated and directories
 
     // 1 - download packed users
     assertReferencedItem(metaObject.users)
