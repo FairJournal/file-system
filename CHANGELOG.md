@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/FairJournal/file-system/compare/v1.0.0...v1.1.0) (2023-07-06)
+
+
+### Features
+
+* exported necessary interfaces ([ae01bb5](https://github.com/FairJournal/file-system/commit/ae01bb504df14b1c57a371b366bc8baf84e9b57a))
+
 ## 1.0.0 (2023-07-06)
 
 
