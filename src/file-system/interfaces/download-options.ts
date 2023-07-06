@@ -9,7 +9,7 @@ export interface DownloadOptions {
    *
    * @param data Data to download
    */
-  downloadData?: (data: ReferencedItem) => Promise<string>
+  downloadData: (data: ReferencedItem) => Promise<string>
 
   /**
    * Download updates
