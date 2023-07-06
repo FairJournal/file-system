@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/FairJournal/file-system/compare/v1.1.0...v1.2.0) (2023-07-06)
+
+
+### Features
+
+* exported actions interfaces ([7bd8e6d](https://github.com/FairJournal/file-system/commit/7bd8e6de98ea1b8dd416e137db786c43975468c6))
+
 ## [1.1.0](https://github.com/FairJournal/file-system/compare/v1.0.0...v1.1.0) (2023-07-06)
 
 
