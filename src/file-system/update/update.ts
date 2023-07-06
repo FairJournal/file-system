@@ -29,14 +29,20 @@ export class Update {
   private actions: Action[] = []
 
   /**
+   * Address or public key of the user
+   * @private
+   */
+  private userAddress = ''
+
+  /**
    * Creates update
    *
    * @param projectName Name of the project
    * @param userAddress Address or public key of the user
    * @param id Id of the update
    */
-  constructor(public projectName: string, private readonly userAddress: string, id?: number) {
-    this.userAddress = userAddress.toLowerCase()
+  constructor(public projectName: string, userAddress?: string, id?: number) {
+    this.setUserAddress(userAddress || '')
 
     if (id !== undefined) {
       this.setId(id)
@@ -108,6 +114,15 @@ export class Update {
    */
   getUserAddress(): string {
     return this.userAddress
+  }
+
+  /**
+   * Sets address of the user
+   *
+   * @param userAddress Address of the user
+   */
+  setUserAddress(userAddress: string): void {
+    this.userAddress = userAddress.toLowerCase()
   }
 
   /**
