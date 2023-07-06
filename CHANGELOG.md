@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/FairJournal/file-system/compare/v1.2.0...v1.3.0) (2023-07-06)
+
+
+### Features
+
+* docs ([d5d8b8e](https://github.com/FairJournal/file-system/commit/d5d8b8e16ccbc47aeb88833fbc8dc59067a0b73d))
+
 ## [1.2.0](https://github.com/FairJournal/file-system/compare/v1.1.0...v1.2.0) (2023-07-06)
 
 
