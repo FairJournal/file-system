@@ -10,7 +10,7 @@ export enum ActionType {
   /**
    * Remove user from the project
    */
-  removeUser = 'REMOVE_USER',
+  // removeUser = 'REMOVE_USER',
 
   /**
    * Add file to the user scope
@@ -20,17 +20,17 @@ export enum ActionType {
   /**
    * Remove file from the user scope
    */
-  removeFile = 'REMOVE_FILE',
+  // removeFile = 'REMOVE_FILE',
 
   /**
    * Modify file in the user scope
    */
-  modifyFile = 'MODIFY_FILE',
+  // modifyFile = 'MODIFY_FILE',
 
   /**
    * Move file in the user scope
    */
-  moveFile = 'MOVE_FILE',
+  // moveFile = 'MOVE_FILE',
 
   /**
    * Add directory to the user scope
@@ -40,17 +40,17 @@ export enum ActionType {
   /**
    * Remove directory from the user scope
    */
-  removeDirectory = 'REMOVE_DIRECTORY',
+  // removeDirectory = 'REMOVE_DIRECTORY',
 
   /**
    * Modify directory in the user scope
    */
-  modifyDirectory = 'MODIFY_DIRECTORY',
+  // modifyDirectory = 'MODIFY_DIRECTORY',
 
   /**
    * Move directory in the user scope
    */
-  moveDirectory = 'MOVE_DIRECTORY',
+  // moveDirectory = 'MOVE_DIRECTORY',
 }
 
 /**
