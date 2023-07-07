@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/FairJournal/file-system/compare/v1.3.0...v1.4.0) (2023-07-07)
+
+
+### Features
+
+* added cross-platform buffer ([cf16735](https://github.com/FairJournal/file-system/commit/cf16735bb42802a899c737a7326f0be09567c019))
+
 ## [1.3.0](https://github.com/FairJournal/file-system/compare/v1.2.0...v1.3.0) (2023-07-06)
 
 
