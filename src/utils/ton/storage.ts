@@ -1,3 +1,4 @@
+import { Buffer } from 'buffer'
 // import CryptoJS from 'crypto-js'
 // import SHA256 from 'crypto-js/sha256'
 // import { MerkleTree } from 'merkletreejs'
