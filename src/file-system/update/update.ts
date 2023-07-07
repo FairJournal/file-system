@@ -156,6 +156,9 @@ export class Update {
     return this.id
   }
 
+  /**
+   * Data for sharing with the gateway
+   */
   getUpdateDataSigned(): UpdateDataSigned {
     if (!this.id) {
       throw new Error('Id is required')

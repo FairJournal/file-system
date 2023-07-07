@@ -1,4 +1,5 @@
 import { signVerify, sign } from 'ton-crypto'
+import { Buffer } from 'buffer'
 
 /**
  * Meta information from data
