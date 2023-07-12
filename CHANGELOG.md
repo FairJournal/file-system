@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.5.0](https://github.com/FairJournal/file-system/compare/v1.4.0...v1.5.0) (2023-07-12)
+
+
+### Features
+
+* exported additional methods, changed allowed symbols in a path ([10ab9b8](https://github.com/FairJournal/file-system/commit/10ab9b846b377ee6866b1fb6e2ce7025149f0c30))
+* improved code validation for github ([ba91c1f](https://github.com/FairJournal/file-system/commit/ba91c1f9196aa95d7af21846970ed46a60e74470))
+* improved code validation for github ([95be121](https://github.com/FairJournal/file-system/commit/95be121530ba4bba3fe5acbd5c30abea28d486c8))
+* improved code validation for github ([d166b18](https://github.com/FairJournal/file-system/commit/d166b18905330da5675bf18547586647c8f17f3b))
+
 ## [1.4.0](https://github.com/FairJournal/file-system/compare/v1.3.0...v1.4.0) (2023-07-07)
 
 
