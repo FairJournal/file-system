@@ -29,5 +29,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Lint check
+        run: npm lint:check
+
+      - name: Check types
+        run: npm check:types
+
       - name: Run tests
         run: npm run test
