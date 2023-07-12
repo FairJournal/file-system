@@ -10,6 +10,16 @@ export interface File extends NamedItem {
   hash: string
 
   /**
+   * Mime type of the file
+   */
+  mimeType: string
+
+  /**
+   * Size of the file in bytes
+   */
+  size: number
+
+  /**
    * Update where directory was created
    */
   updateId: number
@@ -38,7 +48,7 @@ export function isFile(data: unknown): boolean {
 export function assertFile(item: unknown): asserts item is File {
   const data = item as File
 
-  if (!(data.name && data.hash && data.updateId)) {
+  if (!(data.name && data.hash && data.mimeType && data.size && data.updateId)) {
     throw new Error('Invalid file fields')
   }
 }

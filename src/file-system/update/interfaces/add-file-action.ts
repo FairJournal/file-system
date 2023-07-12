@@ -10,6 +10,16 @@ export interface AddFileActionData {
   path: string
 
   /**
+   * Mime type of the file
+   */
+  mimeType: string
+
+  /**
+   * Size of the file in bytes
+   */
+  size: number
+
+  /**
    * Hash of the file
    */
   hash: string
@@ -28,24 +38,14 @@ export interface AddFileAction extends Action {
 /**
  * Create add file action
  *
- * @param path Full path to the file
- * @param hash Hash of the file
+ * @param data Action data
  */
-export function createAddFileAction(path: string, hash: string): AddFileAction {
-  if (!path) {
-    throw new Error('Path is required')
-  }
-
-  if (!hash) {
-    throw new Error('Hash is required')
-  }
+export function createAddFileAction(data: AddFileActionData): AddFileAction {
+  assertFileActionData(data)
 
   return {
     actionType: ActionType.addFile,
-    actionData: {
-      path,
-      hash,
-    },
+    actionData: data,
   } as AddFileAction
 }
 
@@ -57,7 +57,19 @@ export function createAddFileAction(path: string, hash: string): AddFileAction {
 export function assertFileActionData(item: unknown): asserts item is AddFileActionData {
   const data = item as AddFileActionData
 
-  if (!(data.path && data.hash)) {
-    throw new Error('Invalid file action data fields')
+  if (!data.path) {
+    throw new Error('File action data: invalid path')
+  }
+
+  if (!data.hash) {
+    throw new Error('File action data: invalid hash')
+  }
+
+  if (!data.mimeType) {
+    throw new Error('File action data: invalid mime type')
+  }
+
+  if (!data.size) {
+    throw new Error('File action data: invalid size')
   }
 }

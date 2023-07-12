@@ -209,8 +209,10 @@ export function addItem(
     })
   } else if (itemType === ItemType.File) {
     assertFileActionData(item)
-    const preparedItem = {
+    const preparedItem: File = {
       name,
+      mimeType: item.mimeType,
+      size: item.size,
       hash: item.hash,
       updateId,
     }
