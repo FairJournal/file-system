@@ -30,10 +30,10 @@ jobs:
         run: npm ci
 
       - name: Lint check
-        run: npm lint:check
+        run: npm run lint:check
 
       - name: Check types
-        run: npm check:types
+        run: npm run check:types
 
       - name: Run tests
         run: npm run test
