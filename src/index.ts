@@ -1,6 +1,6 @@
 import { FileSystem } from './file-system'
-import { Directory } from './file-system/directory'
-import { File } from './file-system/file'
+import { Directory, assertDirectory, assertDirectories, isDirectory } from './file-system/directory'
+import { File, assertFile, assertFiles, isFile } from './file-system/file'
 import { Tree } from './file-system/interfaces/tree'
 import { Update } from './file-system/update/update'
 import { Action, ActionType } from './file-system/update/interfaces/action'
@@ -31,6 +31,12 @@ export {
   createAddFileAction,
   AddFileActionData,
   AddFileAction,
+  assertDirectory,
+  assertDirectories,
+  assertFile,
+  assertFiles,
+  isDirectory,
+  isFile,
 }
 
 declare global {

@@ -5,7 +5,6 @@ import { ExportMetaOptions } from './interfaces/export-meta-options'
  */
 export const FS_VERSION = '0.0.1'
 
-
 /**
  * Default options for export meta
  */
