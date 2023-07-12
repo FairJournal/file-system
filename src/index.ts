@@ -4,7 +4,12 @@ import { File, assertFile, assertFiles, isFile } from './file-system/file'
 import { Tree } from './file-system/interfaces/tree'
 import { Update } from './file-system/update/update'
 import { Action, ActionType } from './file-system/update/interfaces/action'
-import { UpdateDataSigned } from './file-system/update/interfaces/update-data-signed'
+import {
+  UpdateDataSigned,
+  assertUpdateDataSigned,
+  assertUpdateDataSignedArray,
+  assertUpdateDataSignedObject,
+} from './file-system/update/interfaces/update-data-signed'
 import {
   createAddDirectoryAction,
   AddDirectoryActionData,
@@ -37,6 +42,9 @@ export {
   assertFiles,
   isDirectory,
   isFile,
+  assertUpdateDataSigned,
+  assertUpdateDataSignedArray,
+  assertUpdateDataSignedObject,
 }
 
 declare global {
