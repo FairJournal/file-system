@@ -61,20 +61,23 @@ describe('File System', () => {
     const file1Name = 'file'
     const file1Info: AddFileActionData = {
       path: `/${file1Name}`,
+      mimeType: 'text/plain',
+      size: 1,
       hash: fakeRandomBagIDHash(),
     }
     const update2 = new Update(PROJECT_NAME, authors[0].address, 2)
-    update2.addAction(createAddFileAction(file1Info.path, file1Info.hash))
+    update2.addAction(createAddFileAction(file1Info))
     update2.setSignature(authors[0].personalSign(update2.getSignData()))
 
-    // todo files can not be added if some file already on the same path
     fs.addUpdate(update2.getUpdateDataSigned())
 
     expect(() => fs.addUpdate(update2.getUpdateDataSigned())).toThrowError('Update with id "2" already exists')
 
     expect(fs.getPathInfo(`/${authors[0].address}/file`)).toEqual({
       hash: file1Info.hash,
+      mimeType: file1Info.mimeType,
       name: file1Name,
+      size: file1Info.size,
       updateId: 2,
     })
 

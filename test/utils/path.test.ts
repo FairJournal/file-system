@@ -1,5 +1,5 @@
 import { addItem, assertCanCreateItem, getItem, ItemType } from '../../src/utils/path'
-import { Directory, Tree } from '../../src'
+import { AddFileActionData, Directory, Tree } from '../../src'
 import { fakeRandomBagIDHash } from '../utils'
 import { assertDirectories, assertDirectory, isDirectory } from '../../src/file-system/directory'
 import { assertFiles } from '../../src/file-system/file'
@@ -383,7 +383,7 @@ describe('Path Utils', () => {
       },
       '0x123',
       1,
-      { path: newPath, hash: fakeRandomBagIDHash() },
+      { path: newPath, mimeType: 'text/plain', size: 1, hash: fakeRandomBagIDHash() } as AddFileActionData,
       ItemType.File,
     )
     expect(root[0].directories[0].files).toHaveLength(1)
@@ -510,11 +510,15 @@ describe('Path Utils', () => {
                 files: [
                   {
                     name: 'onefile',
+                    mimeType: 'text/plain',
+                    size: 1,
                     hash: 'somehash',
                     updateId: 1,
                   },
                   {
                     name: 'one1file',
+                    mimeType: 'text/plain',
+                    size: 1,
                     hash: 'somehash',
                     updateId: 1,
                   },
@@ -642,11 +646,15 @@ describe('Path Utils', () => {
                 files: [
                   {
                     name: 'onefile',
+                    mimeType: 'text/plain',
+                    size: 1,
                     hash: 'somehash',
                     updateId: 1,
                   },
                   {
                     name: 'one1file',
+                    mimeType: 'text/plain',
+                    size: 1,
                     hash: 'somehash',
                     updateId: 1,
                   },
