@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/FairJournal/file-system/compare/v1.5.0...v1.6.0) (2023-07-12)
+
+
+### Features
+
+* added mime type and size of a file ([f7a4018](https://github.com/FairJournal/file-system/commit/f7a4018d72c96d2c71315e5cad4282104c692490))
+
 ## [1.5.0](https://github.com/FairJournal/file-system/compare/v1.4.0...v1.5.0) (2023-07-12)
 
 
