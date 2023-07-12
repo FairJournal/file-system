@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/FairJournal/file-system/compare/v1.6.0...v1.7.0) (2023-07-12)
+
+
+### Features
+
+* more exported methods ([39a3186](https://github.com/FairJournal/file-system/commit/39a3186761b070bd0e221683fefb1451ac11add1))
+
 ## [1.6.0](https://github.com/FairJournal/file-system/compare/v1.5.0...v1.6.0) (2023-07-12)
 
 
