@@ -1,12 +1,28 @@
-import { addItem, assertCanCreateItem, ItemType } from '../../src/utils/path'
-import { Directory } from '../../src'
+import { addItem, assertCanCreateItem, getItem, ItemType } from '../../src/utils/path'
+import { Directory, Tree } from '../../src'
 import { fakeRandomBagIDHash } from '../utils'
-import { assertDirectories } from '../../src/file-system/directory'
+import { assertDirectories, assertDirectory, isDirectory } from '../../src/file-system/directory'
 import { assertFiles } from '../../src/file-system/file'
 
 describe('Path Utils', () => {
   it('assertCanCreateItem', async () => {
     const items = [
+      {
+        path: '/hello-world',
+        address: '0x123',
+        root: [
+          {
+            name: '0x123',
+            directories: [],
+            files: [],
+            userAddress: '0x999',
+            updateId: 1,
+          },
+        ] as Directory[],
+        isCorrect: true,
+        message: '',
+      },
+
       {
         path: '/hello',
         address: '0x123',
@@ -259,7 +275,6 @@ describe('Path Utils', () => {
       },
     ]
 
-    // todo check ItemType
     for (const item of items) {
       if (item.isCorrect) {
         expect(() =>
@@ -448,5 +463,219 @@ describe('Path Utils', () => {
         ItemType.Directory,
       ),
     ).toThrow('Invalid path')
+  })
+
+  it('getItem - no recursive', () => {
+    const tree: Tree = {
+      directory: {
+        name: '/',
+        directories: [
+          {
+            name: '0x123',
+            directories: [
+              {
+                name: 'one',
+                directories: [
+                  {
+                    name: 'one_one',
+                    directories: [
+                      {
+                        name: 'one',
+                        directories: [],
+                        files: [],
+                        userAddress: '0x999',
+                        updateId: 1,
+                      },
+                    ],
+                    files: [],
+                    userAddress: '0x999',
+                    updateId: 1,
+                  },
+                  {
+                    name: 'one_two',
+                    directories: [
+                      {
+                        name: 'one',
+                        directories: [],
+                        files: [],
+                        userAddress: '0x999',
+                        updateId: 1,
+                      },
+                    ],
+                    files: [],
+                    userAddress: '0x999',
+                    updateId: 1,
+                  },
+                ],
+                files: [
+                  {
+                    name: 'onefile',
+                    hash: 'somehash',
+                    updateId: 1,
+                  },
+                  {
+                    name: 'one1file',
+                    hash: 'somehash',
+                    updateId: 1,
+                  },
+                ],
+                userAddress: '0x999',
+                updateId: 1,
+              },
+            ],
+            files: [],
+            userAddress: '0x999',
+            updateId: 1,
+          },
+        ],
+        files: [],
+        userAddress: 'someaddress',
+        updateId: 1,
+      },
+    }
+
+    const items = [
+      {
+        path: '/',
+        isDirectory: true,
+        name: '/',
+        directoriesCount: 1,
+        filesCount: 0,
+        isCorrect: true,
+      },
+      {
+        path: '/0x123/one',
+        isDirectory: true,
+        name: 'one',
+        directoriesCount: 2,
+        filesCount: 2,
+        isCorrect: true,
+      },
+      {
+        path: '/0x123/one/onefile',
+        isDirectory: false,
+        name: 'onefile',
+        directoriesCount: 0,
+        filesCount: 0,
+        isCorrect: true,
+      },
+      {
+        path: '/0x123/one/onez',
+        isDirectory: false,
+        name: '',
+        directoriesCount: 0,
+        filesCount: 0,
+        isCorrect: false,
+        error: 'Get item: file not found: "onez"',
+      },
+      {
+        path: '',
+        isDirectory: false,
+        name: '',
+        directoriesCount: 0,
+        filesCount: 0,
+        isCorrect: false,
+        error: 'Invalid path',
+      },
+    ]
+
+    for (const item of items) {
+      if (item.isCorrect) {
+        const foundItem = getItem(item.path, tree.directory)
+        const isFoundDirectory = isDirectory(foundItem)
+        expect(isFoundDirectory).toEqual(item.isDirectory)
+        expect(foundItem.name).toEqual(item.name)
+
+        if (isFoundDirectory) {
+          assertDirectory(foundItem)
+          expect(foundItem.directories).toHaveLength(item.directoriesCount)
+          expect(foundItem.files).toHaveLength(item.filesCount)
+        }
+      } else {
+        expect(() => getItem(item.path, tree.directory)).toThrowError(item.error)
+      }
+    }
+  })
+
+  it('getItem - recursive', () => {
+    const tree: Tree = {
+      directory: {
+        name: '/',
+        directories: [
+          {
+            name: '0x123',
+            directories: [
+              {
+                name: 'one',
+                directories: [
+                  {
+                    name: 'one_one',
+                    directories: [
+                      {
+                        name: 'one111',
+                        directories: [],
+                        files: [],
+                        userAddress: '0x999',
+                        updateId: 1,
+                      },
+                    ],
+                    files: [],
+                    userAddress: '0x999',
+                    updateId: 1,
+                  },
+                  {
+                    name: 'one_two',
+                    directories: [
+                      {
+                        name: 'one222',
+                        directories: [],
+                        files: [],
+                        userAddress: '0x999',
+                        updateId: 1,
+                      },
+                    ],
+                    files: [],
+                    userAddress: '0x999',
+                    updateId: 1,
+                  },
+                ],
+                files: [
+                  {
+                    name: 'onefile',
+                    hash: 'somehash',
+                    updateId: 1,
+                  },
+                  {
+                    name: 'one1file',
+                    hash: 'somehash',
+                    updateId: 1,
+                  },
+                ],
+                userAddress: '0x999',
+                updateId: 1,
+              },
+            ],
+            files: [],
+            userAddress: '0x999',
+            updateId: 1,
+          },
+        ],
+        files: [],
+        userAddress: 'someaddress',
+        updateId: 1,
+      },
+    }
+
+    const result = getItem('/0x123', tree.directory)
+    assertDirectory(result)
+    assertDirectories(result.directories)
+    expect(result.directories).toHaveLength(1)
+    // inside `one` directory 2 directories
+    expect(result.directories[0].directories).toHaveLength(2)
+    assertDirectories(result.directories[0].directories)
+    // inside `one_one` directory 1 directory
+    expect(result.directories[0].directories[0].directories).toHaveLength(1)
+    // inside `one_two` directory 1 directory
+    expect(result.directories[0].directories[1].directories).toHaveLength(1)
   })
 })

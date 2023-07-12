@@ -7,12 +7,13 @@ import { DEFAULT_EXPORT_META_OPTIONS, MAX_ACTIONS_PER_UPDATE } from './const'
 import { FileSystemOptions } from './interfaces/file-system-options'
 import { ActionType } from './update/interfaces/action'
 import { AddDirectoryActionData } from './update/interfaces/add-directory-action'
-import { addItem, ItemType } from '../utils/path'
+import { addItem, getItem, ItemType } from '../utils/path'
 import { AddUserActionData } from './update/interfaces/add-user-action'
 import { AddFileActionData } from './update/interfaces/add-file-action'
 import { UploadOptions } from './interfaces/upload-options'
 import { assertUsers, User } from './interfaces/user'
 import { assertDirectories, assertDirectory, Directory } from './directory'
+import { File } from './file'
 import {
   assertUpdateDataSignedArray,
   assertUpdateDataSignedObject,
@@ -364,5 +365,29 @@ export class FileSystem {
     assertUpdateDataSignedObject(metaObject.updates)
     this._updates = metaObject.updates
     this._userUpdateMap = metaObject.userUpdateMap
+  }
+
+  /**
+   * Gets user's current update id
+   *
+   * @param userAddress User address
+   */
+  getUpdateId(userAddress: string): number {
+    const userUpdateMap = this._userUpdateMap[userAddress]
+
+    if (!userUpdateMap) {
+      return 0
+    }
+
+    return userUpdateMap
+  }
+
+  /**
+   * Gets information about the file or directory by path
+   *
+   * @param path Path to the file or directory
+   */
+  getPathInfo(path: string): File | Directory {
+    return getItem(path, this._tree.directory)
   }
 }

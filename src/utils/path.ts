@@ -1,4 +1,5 @@
 import { assertDirectories, Directory } from '../file-system/directory'
+import { File } from '../file-system/file'
 import { AddFileActionData, assertFileActionData } from '../file-system/update/interfaces/add-file-action'
 import { AddDirectoryActionData } from '../file-system/update/interfaces/add-directory-action'
 import { assertFile, assertFiles } from '../file-system/file'
@@ -133,7 +134,7 @@ export function isValidPath(path: string): boolean {
   }
 
   // Check if path contains only alphanumeric characters and '/'
-  const isValid = /^[a-zA-Z0-9/]*$/.test(path)
+  const isValid = /^[a-zA-Z0-9-/]*$/.test(path)
 
   if (!isValid) {
     return false
@@ -155,7 +156,7 @@ export function isValidaDirectoryName(directoryName: string): boolean {
     return false
   }
 
-  return /^[a-zA-Z0-9]*$/.test(directoryName)
+  return /^[a-zA-Z0-9-]*$/.test(directoryName)
 }
 
 /**
@@ -187,7 +188,6 @@ export function addItem(
   let currentRoot: Directory = root
   for (let i = 0; i < iterateParts.length; i++) {
     const findPart = iterateParts[i]
-
     assertDirectories(currentRoot.directories)
     const found: Directory | undefined = currentRoot.directories.find(item => item.name === findPart)
 
@@ -218,4 +218,43 @@ export function addItem(
     assertFiles(currentRoot.files)
     currentRoot.files.push(preparedItem)
   }
+}
+
+/**
+ * Gets item by path
+ *
+ * @param path Path to the item
+ * @param root Root directory
+ */
+export function getItem(path: string, root: Directory): Directory | File {
+  if (!isValidPath(path)) {
+    throw new Error('Invalid path')
+  }
+
+  if (root.name !== '/') {
+    throw new Error('Root directory should have name "/"')
+  }
+
+  const parts = getPathParts(path).slice(1)
+  let currentRoot: Directory = root
+  for (let i = 0; i < parts.length; i++) {
+    const findPart = parts[i]
+    assertDirectories(currentRoot.directories)
+    const found: Directory | undefined = currentRoot.directories.find(item => item.name === findPart)
+
+    if (found) {
+      currentRoot = found // move currentRoot to found directory
+    } else {
+      assertFiles(currentRoot.files)
+      const foundFile: File | undefined = currentRoot.files.find(item => item.name === findPart)
+
+      if (!foundFile) {
+        throw new Error(`Get item: file not found: "${findPart}"`)
+      }
+
+      return foundFile
+    }
+  }
+
+  return currentRoot
 }

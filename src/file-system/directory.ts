@@ -29,6 +29,21 @@ export interface Directory extends NamedItem {
 }
 
 /**
+ * Checks if data is a directory
+ *
+ * @param data Data to check
+ */
+export function isDirectory(data: unknown): boolean {
+  try {
+    assertDirectory(data)
+
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+/**
  * Asserts that item is a directory
  *
  * @param data Item to check
@@ -59,6 +74,7 @@ export function assertDirectory(data: unknown): asserts data is Directory {
 
 /**
  * Asserts that data is an array of directories
+ *
  * @param data Data to check
  */
 export function assertDirectories(data: unknown): asserts data is Directory[] {

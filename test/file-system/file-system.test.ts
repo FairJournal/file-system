@@ -1,5 +1,5 @@
 import { FileSystem } from '../../src'
-import { createStorageCli, createWallet, fakeRandomBagIDHash } from '../utils'
+import { createWallet, fakeRandomBagIDHash } from '../utils'
 import { personalSign, personalSignVerify } from '../../src/utils/ton/ton'
 import { Update } from '../../src/file-system/update/update'
 import { AddFileActionData, createAddFileAction } from '../../src/file-system/update/interfaces/add-file-action'
@@ -51,9 +51,11 @@ describe('File System', () => {
     // add users
     for (const author of authors) {
       const update = new Update(PROJECT_NAME, author.address, 1)
+      expect(fs.getUpdateId(author.address)).toEqual(0)
       update.addAction(createAddUserAction(author.address))
       update.setSignature(author.personalSign(update.getSignData()))
       fs.addUpdate(update.getUpdateDataSigned())
+      expect(fs.getUpdateId(author.address)).toEqual(1)
     }
 
     const file1Name = 'file'
@@ -69,6 +71,12 @@ describe('File System', () => {
     fs.addUpdate(update2.getUpdateDataSigned())
 
     expect(() => fs.addUpdate(update2.getUpdateDataSigned())).toThrowError('Update with id "2" already exists')
+
+    expect(fs.getPathInfo(`/${authors[0].address}/file`)).toEqual({
+      hash: file1Info.hash,
+      name: file1Name,
+      updateId: 2,
+    })
 
     const meta = fs.exportMeta()
     // ["directory"]

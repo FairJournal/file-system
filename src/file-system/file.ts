@@ -16,6 +16,21 @@ export interface File extends NamedItem {
 }
 
 /**
+ * Checks if data is a file
+ *
+ * @param data Data to check
+ */
+export function isFile(data: unknown): boolean {
+  try {
+    assertFile(data)
+
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+/**
  * Asserts that item is a file
  *
  * @param item Item to check
@@ -30,6 +45,7 @@ export function assertFile(item: unknown): asserts item is File {
 
 /**
  * Asserts that data is an array of files
+ *
  * @param data Data to check
  */
 export function assertFiles(data: unknown): asserts data is File[] {
