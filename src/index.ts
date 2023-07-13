@@ -17,6 +17,7 @@ import {
 } from './file-system/update/interfaces/add-directory-action'
 import { createAddUserAction, AddUserActionData, AddUserAction } from './file-system/update/interfaces/add-user-action'
 import { createAddFileAction, AddFileActionData, AddFileAction } from './file-system/update/interfaces/add-file-action'
+import { personalSignVerify, personalSign } from './utils/ton/ton'
 
 export {
   FileSystem,
@@ -45,6 +46,8 @@ export {
   assertUpdateDataSigned,
   assertUpdateDataSignedArray,
   assertUpdateDataSignedObject,
+  personalSignVerify,
+  personalSign,
 }
 
 declare global {
