@@ -71,7 +71,9 @@ describe('File System', () => {
 
     fs.addUpdate(update2.getUpdateDataSigned())
 
+    expect(fs.getUpdateId(authors[0].address)).toEqual(2)
     expect(() => fs.addUpdate(update2.getUpdateDataSigned())).toThrowError('Update with id "2" already exists')
+    expect(fs.getUpdateId(authors[0].address)).toEqual(2)
 
     expect(fs.getPathInfo(`/${authors[0].address}/file`)).toEqual({
       hash: file1Info.hash,

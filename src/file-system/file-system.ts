@@ -184,13 +184,6 @@ export class FileSystem {
       throw new Error('Update signature is not valid')
     }
 
-    if (!this._updates[updateData.userAddress]) {
-      this._updates[updateData.userAddress] = []
-    }
-
-    this._updates[updateData.userAddress].push(updateData)
-    this._userUpdateMap[update.getUserAddress()] = update.getId()
-
     for (const action of update.getActions()) {
       // check that user performs actions only after he was registered
       if (action.actionType !== ActionType.addUser && !this.isUserExists(update.getUserAddress())) {
@@ -211,6 +204,13 @@ export class FileSystem {
         this.addFile(update, action.actionData as AddFileActionData)
       }
     }
+
+    if (!this._updates[updateData.userAddress]) {
+      this._updates[updateData.userAddress] = []
+    }
+
+    this._updates[updateData.userAddress].push(updateData)
+    this._userUpdateMap[update.getUserAddress()] = update.getId()
   }
 
   /**
