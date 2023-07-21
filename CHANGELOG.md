@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.9.1](https://github.com/FairJournal/file-system/compare/v1.9.0...v1.9.1) (2023-07-21)
+
+
+### Bug Fixes
+
+* Update README.md ([0ab05b3](https://github.com/FairJournal/file-system/commit/0ab05b310e82ae717c20cb3186e7c94d26499513))
+
 ## [1.9.0](https://github.com/FairJournal/file-system/compare/v1.8.0...v1.9.0) (2023-07-21)
 
 
