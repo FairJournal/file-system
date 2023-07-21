@@ -4,8 +4,6 @@ This Typescript library creates a public virtual file system for data sharing, c
 
 ## Features
 
-Sure, here are the features of the library and backend:
-
 **Library Features:**
 
 1. **Decentralized Storage Compatibility:** It works with multiple decentralized storage systems including IPFS, TON Storage, Torrent, Arweave, and Swarm.
