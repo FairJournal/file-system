@@ -25,6 +25,7 @@ import { assertKeyNumberMap } from './interfaces/key-number-map'
 import { assertReferencedItem, ReferencedItem } from './interfaces/referenced-item'
 import { assertReferencedItems, ReferencedItems } from './interfaces/referenced-items'
 import { RemoveDirectoryActionData } from './update/interfaces/remove-directory-action'
+import { RemoveFileActionData } from './update/interfaces/remove-file-action'
 
 /**
  * File System on top of immutable data storage
@@ -80,6 +81,17 @@ export class FileSystem {
    */
   private removeDirectory(update: Update, data: RemoveDirectoryActionData): void {
     removeItem(this._tree.directory, update.getUserAddress(), update.getId(), data, ItemType.Directory)
+  }
+
+  /**
+   * Remove file from the file system
+   *
+   * @param update Update from the user
+   * @param data Data of the update
+   * @private
+   */
+  private removeFile(update: Update, data: RemoveFileActionData): void {
+    removeItem(this._tree.directory, update.getUserAddress(), update.getId(), data, ItemType.File)
   }
 
   /**
@@ -186,6 +198,8 @@ export class FileSystem {
       this.addFile(update, action.actionData as AddFileActionData)
     } else if (action.actionType === ActionType.removeDirectory) {
       this.removeDirectory(update, action.actionData as RemoveDirectoryActionData)
+    } else if (action.actionType === ActionType.removeFile) {
+      this.removeFile(update, action.actionData as RemoveFileActionData)
     } else {
       throw new Error(`Action type "${action.actionType}" is not implemented`)
     }

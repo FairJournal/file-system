@@ -3,7 +3,7 @@ import { File } from '../file-system/file'
 import { AddFileActionData, assertFileActionData } from '../file-system/update/interfaces/add-file-action'
 import { AddDirectoryActionData } from '../file-system/update/interfaces/add-directory-action'
 import { assertFile, assertFiles } from '../file-system/file'
-import { RemoveFileActionData } from '../file-system/update/interfaces/remove-file-action'
+import { assertRemoveFileActionData, RemoveFileActionData } from '../file-system/update/interfaces/remove-file-action'
 import { RemoveDirectoryActionData } from '../file-system/update/interfaces/remove-directory-action'
 
 /**
@@ -110,24 +110,24 @@ function assertItemOperation(
     assertDirectories(currentDirectory.directories)
 
     if (operation === 'create' && currentDirectory.directories.find(item => item.name === name)) {
-      throw new Error('Directory already exists')
+      throw new Error(`Directory already exists: "${name}"`)
     }
 
     if (operation === 'remove' && !currentDirectory.directories.find(item => item.name === name)) {
-      throw new Error('Directory does not exist')
+      throw new Error(`Directory does not exist: "${name}"`)
     }
   } else if (itemType === ItemType.File) {
     assertFiles(currentDirectory.files)
 
     if (operation === 'create' && currentDirectory.files.find(item => item.name === name)) {
-      throw new Error('File already exists')
+      throw new Error(`File already exists: "${name}"`)
     }
 
     if (operation === 'remove' && !currentDirectory.files.find(item => item.name === name)) {
-      throw new Error('File does not exist')
+      throw new Error(`File does not exist: "${name}"`)
     }
   } else {
-    throw new Error('Unknown item type')
+    throw new Error(`Unknown item type: "${itemType}"`)
   }
 }
 
@@ -315,7 +315,7 @@ export function removeItem(
       throw new Error(`Remove directory: directory not found: "${name}"`)
     }
   } else if (itemType === ItemType.File) {
-    assertFileActionData(item)
+    assertRemoveFileActionData(item)
     assertFiles(currentRoot.files)
     const index = currentRoot.files.findIndex(file => file.name === name)
 
