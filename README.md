@@ -42,61 +42,115 @@ The backend is designed to enable users to leverage decentralized technologies w
 Using
 
 ```typescript
-import { FileSystem, AddFileActionData, createAddUserAction } from '@fairjournal/file-system'
+import { FileSystem, Update, createAddUserAction, createAddDirAction, AddFileActionData, createAddFileAction, createRemoveFileAction, createRemoveDirAction } from '@fairjournal/file-system'
 
-// creating file system instance
-// it can be created on the user's maching or on a gateway
+const PROJECT_NAME = 'decentralized-social-network'
+const PROJECT_DESCRIPTION = 'The best project in the world'
+
+// Creating a FileSystem instance
+// It can be created on the user's machine or on a gateway
 const fs = new FileSystem({
   version: '0.0.1',
-  projectName: 'hello-world',
-  projectDescription: 'The best project in the world',
-  checkSignature: 'your-project',
-})
+  projectName: PROJECT_NAME,
+  projectDescription: PROJECT_DESCRIPTION,
 
-const fileInfo = {
-  // path on the virtual file system
-  path: `/my-file`,
-  
-  // mime type of the data
-  mimeType: 'application/json',
-  
-  // data to upload
-  data: 'Hello world!',
-  
-  // sha-256 hash of the data
-  hash: 'c0535e4be2b79ffd93291305436bf889314e4a3faec05ecffcbb7df31ad9e51a'
-}
+  // `checkSignature` is used to verify the signature. You should pass here 
+  // the supported signature as a string or a function that can handle signature verification.
+  // If you pass a string, the built-in function for that type of signature will be used.
+  // If you pass a function, it will be used as a custom signature verification function.
+  checkSignature: 'ton',
+})
 
 const author = {
   // address/public key of the author
   author: '0x....',
-  
-  // signing method. it can be called externally using browser extions, for example
+
+  // signing method
   personalSign: (data: string) => {
     // sign data using a wallet or a private key of the user
   }
 }
 
-// registering the author's file system
+// Creating an update instance
+let update = new Update(PROJECT_NAME, author.address, 1)
+
+// Registering the author's FileSystem
 update.addAction(createAddUserAction(author.address))
 
-// adding file to the file system
-update.addAction(
-  createAddFileAction({
-    path: fileInfo.path,
-    mimeType: fileInfo.mimeType,
-    size: fileInfo.data.length,
-    hash: fileInfo.hash,
-  }),
-)
-
-// signing all changes to the user's file system
+// Signing all changes to the user's FileSystem
 update.setSignature(author.personalSign(update.getSignData()))
 
-// getting data of the update with the signature
-const dataToShare = update.getUpdateDataSigned()
+// Applying the update
+fs.addUpdate(update.getUpdateDataSigned())
 
-// this data can be shared with a gateway
-// after applying the data, it will become available to other users via Mempool
-fs.addUpdate(dataToShare)
+// Creating a directory
+update = new Update(PROJECT_NAME, author.address, 2)
+update.addAction(createAddDirAction('/my-dir'))
+
+// Signing the update
+update.setSignature(author.personalSign(update.getSignData()))
+
+// Applying the update
+fs.addUpdate(update.getUpdateDataSigned())
+
+const fileInformation: AddFileActionData = {
+  path: '/my-dir/my-file',
+  mimeType: 'application/json',
+  size: 13,
+  hash: 'c0535e4be2b79ffd93291305436bf889314e4a3faec05ecffcbb7df31ad9e51a',
+}
+
+// Adding a file to the directory
+update = new Update(PROJECT_NAME, author.address, 3)
+update.addAction(createAddFileAction(fileInformation))
+
+// Signing the update
+update.setSignature(author.personalSign(update.getSignData()))
+
+// Applying the update
+fs.addUpdate(update.getUpdateDataSigned())
+
+// Removing a file
+update = new Update(PROJECT_NAME, author.address, 4)
+update.addAction(createRemoveFileAction('/my-dir/my-file'))
+
+// Signing the update
+update.setSignature(author.personalSign(update.getSignData()))
+
+// Applying the update
+fs.addUpdate(update.getUpdateDataSigned())
+
+// Removing a directory
+update = new Update(PROJECT_NAME, author.address, 5)
+update.addAction(createRemoveDirAction('/my-dir'))
+
+// Signing the update
+update.setSignature(author.personalSign(update.getSignData()))
+
+// Applying the update
+fs.addUpdate(update.getUpdateDataSigned())
+
+// Uploading FileSystem data to the network
+const uploadResult = await fs.upload({
+  uploadData: async data => {
+    // Here you would handle uploading the data to your network (IPFS, TON Storage, Torrent, Arweave, Swarm and etc),
+    // And return an identifier/reference to where the data has been uploaded
+    return { reference: 'your-upload-reference' }
+  }
+})
+
+// Downloading FileSystem data from the network
+const newFs = new FileSystem({
+  version: '0.0.1',
+  projectName: PROJECT_NAME,
+  projectDescription: PROJECT_DESCRIPTION,
+  checkSignature: 'ton',
+})
+await newFs.download(uploadResult.reference, {
+  downloadData: async data => {
+    // Here you would handle fetching the data from your network using the provided reference
+    return 'your-downloaded-data'
+  },
+  withUpdates: true,
+})
 ```
