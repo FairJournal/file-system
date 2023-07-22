@@ -5,7 +5,7 @@ import { Action } from './action'
  */
 export interface UpdateData {
   /**
-   * Id of the update
+   * ID of the update
    */
   id: number
 

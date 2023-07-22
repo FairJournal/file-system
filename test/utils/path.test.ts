@@ -85,7 +85,7 @@ describe('Path Utils', () => {
           },
         ] as Directory[],
         isCorrect: false,
-        message: 'Name of the directory is required',
+        message: 'Name of the item is required',
       },
 
       // incorrect user path
@@ -425,7 +425,7 @@ describe('Path Utils', () => {
         { path: newPath },
         ItemType.Directory,
       ),
-    ).toThrow('Name of the directory is required')
+    ).toThrow('Name of the item is required')
   })
 
   it('addDirectory - backward slash in the end', async () => {
@@ -570,7 +570,7 @@ describe('Path Utils', () => {
         directoriesCount: 0,
         filesCount: 0,
         isCorrect: false,
-        error: 'Get item: file not found: "onez"',
+        error: 'Get item: item not found: "onez"',
       },
       {
         path: '',

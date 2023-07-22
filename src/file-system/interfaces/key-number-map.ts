@@ -1,5 +1,3 @@
-import { assertObject } from '../../utils/types'
-
 /**
  * Key number interface
  */
@@ -16,13 +14,15 @@ export interface KeyNumberMap {
  * @param data Data to check
  */
 export function assertKeyNumberMap(data: unknown): asserts data is KeyNumberMap {
-  const item = data as KeyNumberMap
+  if (typeof data !== 'object' || data === null) {
+    throw new Error('KeyNumberMap: data is not an object')
+  }
 
-  assertObject(item, 'KeyNumberMap: data is not an object')
+  const item = data as Record<string, unknown>
 
-  Object.values(item).forEach(value => {
-    if (typeof value !== 'number') {
+  for (const key in item) {
+    if (typeof item[key] !== 'number') {
       throw new Error('KeyNumberMap: value is not a number')
     }
-  })
+  }
 }
