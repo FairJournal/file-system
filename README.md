@@ -30,7 +30,9 @@ The backend serves as a Mempool, Gateway, and Rollup. Here's the function of eac
 
 3. **Rollup:** It aggregates all user changes over a specified period into a single hash. This hash is then stored in a smart contract at regular intervals (e.g., every minute/hour/day). This approach significantly reduces the typically high costs associated with smart contract modifications, potentially saving users thousands of dollars.
 
-The backend is designed to enable users to leverage decentralized technologies without installing complex and security-intensive software.
+4. **Appchains:** By combining the backend and file system components, services can build Appchains for data storage. As the project evolves, these data Appchains will be interconnected in a decentralized manner, further enhancing the system's robustness and scalability.
+
+The backend is designed to enable users to leverage decentralized technologies without installing complex software.
 
 
 ## Installation
