@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.0](https://github.com/FairJournal/file-system/compare/v1.9.2...v1.10.0) (2023-07-22)
+
+
+### Features
+
+* remove directory ([6991d5d](https://github.com/FairJournal/file-system/commit/6991d5dada7146eb6553b6d316c30eceae6d0da9))
+* remove file ([df566a0](https://github.com/FairJournal/file-system/commit/df566a05e0e2b56695df4fd53b5efe8ade8195f0))
+
 ## [1.9.2](https://github.com/FairJournal/file-system/compare/v1.9.1...v1.9.2) (2023-07-22)
 
 
