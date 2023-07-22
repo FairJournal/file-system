@@ -11,7 +11,7 @@ import { assertPositiveNumber } from '../../utils/types'
  */
 export class Update {
   /**
-   * Id of the update specific for the user
+   * ID of the update specific for the user
    * @private
    */
   private id = 0

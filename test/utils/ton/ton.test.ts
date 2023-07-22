@@ -1,6 +1,20 @@
-import { extractDataMeta, MAX_INDEX_LENGTH, MAX_OPENMASK_REAL_LENGTH } from '../../../src/utils/ton/ton'
+import {
+  extractDataMeta,
+  MAX_INDEX_LENGTH,
+  MAX_OPENMASK_REAL_LENGTH,
+  personalSignVerify,
+} from '../../../src/utils/ton/ton'
 
 describe('TON Utils', () => {
+  it('check personal signature', async () => {
+    const publicKey = 'd66401889725ada1f6ba8e78f67d24aec386341d8e3310f00ef64df463def1ef'
+    const data = 'Hello world!'
+    // signature created using Openmask
+    const signature =
+      'efb732d1d06d12c7dc9d9e59aebf8bb3c03f081806f3e31cfe26a2263db9cd840b47bb70f915bb06f601d54ec75263f9b0e31ec0fde70ea11a0f2a2c9725200c'
+    expect(personalSignVerify(data, signature, publicKey)).toBeTruthy()
+  })
+
   it('extractDataMeta', async () => {
     const items = [
       // check hash for only lowercase letters

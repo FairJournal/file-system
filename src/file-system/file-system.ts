@@ -5,15 +5,15 @@ import { assertExportMeta, ExportMeta } from './interfaces/export-meta'
 import { ExportMetaOptions } from './interfaces/export-meta-options'
 import { DEFAULT_EXPORT_META_OPTIONS, MAX_ACTIONS_PER_UPDATE } from './const'
 import { FileSystemOptions } from './interfaces/file-system-options'
-import { ActionType } from './update/interfaces/action'
+import { Action, ActionType } from './update/interfaces/action'
 import { AddDirectoryActionData } from './update/interfaces/add-directory-action'
-import { addItem, getItem, ItemType } from '../utils/path'
+import { addItem, getItem, ItemType, removeItem } from '../utils/path'
 import { AddUserActionData } from './update/interfaces/add-user-action'
 import { AddFileActionData } from './update/interfaces/add-file-action'
 import { UploadOptions } from './interfaces/upload-options'
 import { assertUsers, User } from './interfaces/user'
 import { assertDirectories, assertDirectory, Directory } from './directory'
-import { File } from './file'
+import { assertFiles, File } from './file'
 import {
   assertUpdateDataSignedArray,
   assertUpdateDataSignedObject,
@@ -21,10 +21,11 @@ import {
 } from './update/interfaces/update-data-signed'
 import { assertJson, assertObject, deepClone } from '../utils/types'
 import { DownloadOptions } from './interfaces/download-options'
-import { assertFiles } from './file'
 import { assertKeyNumberMap } from './interfaces/key-number-map'
 import { assertReferencedItem, ReferencedItem } from './interfaces/referenced-item'
 import { assertReferencedItems, ReferencedItems } from './interfaces/referenced-items'
+import { RemoveDirectoryActionData } from './update/interfaces/remove-directory-action'
+import { RemoveFileActionData } from './update/interfaces/remove-file-action'
 
 /**
  * File System on top of immutable data storage
@@ -69,6 +70,28 @@ export class FileSystem {
    */
   private addDirectory(update: Update, data: AddDirectoryActionData): void {
     addItem(this._tree.directory, update.getUserAddress(), update.getId(), data, ItemType.Directory)
+  }
+
+  /**
+   * Remove directory from the file system
+   *
+   * @param update Update from the user
+   * @param data Data of the update
+   * @private
+   */
+  private removeDirectory(update: Update, data: RemoveDirectoryActionData): void {
+    removeItem(this._tree.directory, update.getUserAddress(), update.getId(), data, ItemType.Directory)
+  }
+
+  /**
+   * Remove file from the file system
+   *
+   * @param update Update from the user
+   * @param data Data of the update
+   * @private
+   */
+  private removeFile(update: Update, data: RemoveFileActionData): void {
+    removeItem(this._tree.directory, update.getUserAddress(), update.getId(), data, ItemType.File)
   }
 
   /**
@@ -129,49 +152,13 @@ export class FileSystem {
   }
 
   /**
-   * Add update to file system
+   * Validate signature of the update
+   *
+   * @param update Update to validate
    */
-  addUpdate(updateData: UpdateDataSigned): void {
-    if (this.options.checkSignature !== 'ton') {
-      throw new Error('Not implemented signature check for this type')
-    }
-
-    const update = new Update(updateData.projectName, updateData.userAddress, updateData.id)
-    update.setActions(updateData.actions)
-    update.setSignature(updateData.signature)
-
-    if (update.getActions().length === 0) {
-      throw new Error('Update should have at least one action')
-    }
-
-    if (update.getActions().length > MAX_ACTIONS_PER_UPDATE) {
-      throw new Error(`Update should have max "${MAX_ACTIONS_PER_UPDATE}" actions`)
-    }
-
+  validateSignature(update: Update) {
     if (!update.getSignature()) {
       throw new Error('Update signature is required')
-    }
-
-    if (update.projectName !== this.options.projectName) {
-      throw new Error(`Project name is not valid. Expected: ${this.options.projectName}`)
-    }
-
-    if (update.getId() <= 0) {
-      throw new Error('Update id should be greater than 0')
-    }
-
-    if (!this._userUpdateMap[update.getUserAddress()]) {
-      this._userUpdateMap[update.getUserAddress()] = 0
-    }
-
-    if (this._userUpdateMap[update.getUserAddress()] >= update.getId()) {
-      throw new Error(`Update with id "${update.getId()}" already exists`)
-    }
-
-    if (this._userUpdateMap[update.getUserAddress()] !== update.getId() - 1) {
-      throw new Error(
-        `Update should be sequential. Expected id is "${this._userUpdateMap[update.getUserAddress()] + 1}"`,
-      )
     }
 
     const signData = update.getSignData()
@@ -183,38 +170,142 @@ export class FileSystem {
     if (!personalSignVerify(signData, update.getSignature(), update.getUserAddress())) {
       throw new Error('Update signature is not valid')
     }
-
-    for (const action of update.getActions()) {
-      // check that user performs actions only after he was registered
-      if (action.actionType !== ActionType.addUser && !this.isUserExists(update.getUserAddress())) {
-        throw new Error(`User with address "${update.getUserAddress()}" is not registered. Action can't be performed`)
-      }
-
-      if (action.actionType === ActionType.addDirectory) {
-        this.addDirectory(update, action.actionData as AddDirectoryActionData)
-      } else if (action.actionType === ActionType.addUser) {
-        const actionData = action.actionData as AddUserActionData
-
-        if (update.getUserAddress() !== actionData.userAddress) {
-          throw new Error('Update user address is not the same as user address from action data')
-        }
-
-        this.addUser(update.getId(), actionData)
-      } else if (action.actionType === ActionType.addFile) {
-        this.addFile(update, action.actionData as AddFileActionData)
-      }
-    }
-
-    if (!this._updates[updateData.userAddress]) {
-      this._updates[updateData.userAddress] = []
-    }
-
-    this._updates[updateData.userAddress].push(updateData)
-    this._userUpdateMap[update.getUserAddress()] = update.getId()
   }
 
   /**
-   * Return prepared file system
+   * Handle action of the update
+   *
+   * @param update Update to handle
+   * @param action Action to handle
+   * @private
+   */
+  private handleAction(update: Update, action: Action) {
+    if (action.actionType !== ActionType.addUser && !this.isUserExists(update.getUserAddress())) {
+      throw new Error(`User with address "${update.getUserAddress()}" is not registered. Action can't be performed`)
+    }
+
+    if (action.actionType === ActionType.addDirectory) {
+      this.addDirectory(update, action.actionData as AddDirectoryActionData)
+    } else if (action.actionType === ActionType.addUser) {
+      const actionData = action.actionData as AddUserActionData
+
+      if (update.getUserAddress() !== actionData.userAddress) {
+        throw new Error('Update user address is not the same as user address from action data')
+      }
+
+      this.addUser(update.getId(), actionData)
+    } else if (action.actionType === ActionType.addFile) {
+      this.addFile(update, action.actionData as AddFileActionData)
+    } else if (action.actionType === ActionType.removeDirectory) {
+      this.removeDirectory(update, action.actionData as RemoveDirectoryActionData)
+    } else if (action.actionType === ActionType.removeFile) {
+      this.removeFile(update, action.actionData as RemoveFileActionData)
+    } else {
+      throw new Error(`Action type "${action.actionType}" is not implemented`)
+    }
+  }
+
+  /**
+   * Add update to file system
+   */
+  addUpdate(updateData: UpdateDataSigned): void {
+    if (this.options.checkSignature !== 'ton') {
+      throw new Error('Not implemented signature check for this type')
+    }
+
+    const update = new Update(updateData.projectName, updateData.userAddress, updateData.id)
+    update.setActions(updateData.actions)
+    update.setSignature(updateData.signature)
+
+    this.validateUpdateActions(update)
+    this.validateUpdateProjectName(update)
+    this.validateUpdateId(update)
+
+    const userAddress = update.getUserAddress()
+
+    if (!this._userUpdateMap[userAddress]) {
+      this._userUpdateMap[userAddress] = 0
+    }
+
+    this.validateSequentialUpdate(userAddress, update)
+
+    this.validateSignature(update)
+
+    for (const action of update.getActions()) {
+      this.handleAction(update, action)
+    }
+
+    if (!this._updates[userAddress]) {
+      this._updates[userAddress] = []
+    }
+
+    this._updates[userAddress].push(updateData)
+    this._userUpdateMap[userAddress] = update.getId()
+  }
+
+  /**
+   * Validate actions of the update
+   *
+   * @param update Update to validate
+   * @private
+   */
+  private validateUpdateActions(update: Update): void {
+    const actionsLength = update.getActions().length
+
+    if (actionsLength === 0) {
+      throw new Error('Update should have at least one action')
+    }
+
+    if (actionsLength > MAX_ACTIONS_PER_UPDATE) {
+      throw new Error(`Update should have max "${MAX_ACTIONS_PER_UPDATE}" actions`)
+    }
+  }
+
+  /**
+   * Validate project name of the update
+   *
+   * @param update Update to validate
+   * @private
+   */
+  private validateUpdateProjectName(update: Update): void {
+    if (update.projectName !== this.options.projectName) {
+      throw new Error(`Project name is not valid. Expected: ${this.options.projectName}`)
+    }
+  }
+
+  /**
+   * Validate id of the update
+   *
+   * @param update Update to validate
+   * @private
+   */
+  private validateUpdateId(update: Update): void {
+    if (update.getId() <= 0) {
+      throw new Error('Update id should be greater than 0')
+    }
+  }
+
+  /**
+   * Validate sequential update
+   *
+   * @param userAddress Address of the user
+   * @param update Update to validate
+   * @private
+   */
+  private validateSequentialUpdate(userAddress: string, update: Update): void {
+    if (this._userUpdateMap[userAddress] >= update.getId()) {
+      throw new Error(`Update with id "${update.getId()}" already exists`)
+    }
+
+    if (this._userUpdateMap[userAddress] !== update.getId() - 1) {
+      throw new Error(`Update should be sequential. Expected id is "${this._userUpdateMap[userAddress] + 1}"`)
+    }
+  }
+
+  /**
+   * Returns prepared file system metadata
+   *
+   * @param options Export options
    */
   exportMeta(options?: ExportMetaOptions): ExportMeta {
     options = options ? options : DEFAULT_EXPORT_META_OPTIONS

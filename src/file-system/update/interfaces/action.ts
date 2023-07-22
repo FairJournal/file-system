@@ -20,7 +20,7 @@ export enum ActionType {
   /**
    * Remove file from the user scope
    */
-  // removeFile = 'REMOVE_FILE',
+  removeFile = 'REMOVE_FILE',
 
   /**
    * Modify file in the user scope
@@ -40,7 +40,7 @@ export enum ActionType {
   /**
    * Remove directory from the user scope
    */
-  // removeDirectory = 'REMOVE_DIRECTORY',
+  removeDirectory = 'REMOVE_DIRECTORY',
 
   /**
    * Modify directory in the user scope

@@ -17,6 +17,16 @@ import {
 } from './file-system/update/interfaces/add-directory-action'
 import { createAddUserAction, AddUserActionData, AddUserAction } from './file-system/update/interfaces/add-user-action'
 import { createAddFileAction, AddFileActionData, AddFileAction } from './file-system/update/interfaces/add-file-action'
+import {
+  createRemoveFileAction,
+  RemoveFileActionData,
+  RemoveFileAction,
+} from './file-system/update/interfaces/remove-file-action'
+import {
+  createRemoveDirectoryAction,
+  RemoveDirectoryActionData,
+  RemoveDirectoryAction,
+} from './file-system/update/interfaces/remove-directory-action'
 import { personalSignVerify, personalSign } from './utils/ton/ton'
 
 export {
@@ -48,6 +58,12 @@ export {
   assertUpdateDataSignedObject,
   personalSignVerify,
   personalSign,
+  createRemoveFileAction,
+  RemoveFileActionData,
+  RemoveFileAction,
+  createRemoveDirectoryAction,
+  RemoveDirectoryActionData,
+  RemoveDirectoryAction,
 }
 
 declare global {
