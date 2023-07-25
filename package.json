@@ -1,6 +1,6 @@
 {
   "name": "@fairjournal/file-system",
-  "version": "1.10.0",
+  "version": "1.10.1",
   "description": "File System on the top of immutable storages",
   "main": "dist/index.min.js",
   "types": "dist/src/index.d.ts",
