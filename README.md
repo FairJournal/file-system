@@ -1,4 +1,4 @@
-# File System on top of Immutable Storages
+# Mutable File System on top of Immutable Storages
 
 This Typescript library creates a public virtual file system for data sharing, compatible with decentralized storages like IPFS, TON Storage, Torrent, Arweave or Swarm. It allows users to control their data, storing various content types (videos, photos, text) in their own file systems. Files systems, once combined, form a decentralized social network like an uncensored Reddit, YouTube or Medium. Public gateways manage data, with cryptographic signatures ensuring no alterations. A unique feature economizes smart contract changes by aggregating them into a single hash, saved at regular intervals, protecting by users' crypto wallets.
 
