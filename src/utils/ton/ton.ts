@@ -133,7 +133,7 @@ export function personalSignVerify(data: string, signature: string, publicKey: s
  */
 export function personalSign(data: string, secretKey: Buffer): string {
   return sign(
-    Buffer.concat([Buffer.from([0xff, 0xff]), Buffer.from(TON_SAFE_SIGN_MAGIC), Buffer.from(data, 'utf8')]),
+    Buffer.concat([Buffer.from([0xff, 0xff]), Buffer.from(TON_SAFE_SIGN_MAGIC), nacl.hash(Buffer.from(data, 'utf8'))]),
     secretKey,
   ).toString('hex')
 }
