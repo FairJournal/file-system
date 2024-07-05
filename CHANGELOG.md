@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.10.1](https://github.com/FairJournal/file-system/compare/v1.10.0...v1.10.1) (2024-07-05)
+
+
+### Bug Fixes
+
+* changed signature verification for openmask ([dd7ff33](https://github.com/FairJournal/file-system/commit/dd7ff33515332083d60b1faffe094b5d9c0eb619))
+* changed signature verification for openmask ([c9b6437](https://github.com/FairJournal/file-system/commit/c9b6437cfbb290d382ebf431d159d7857964fdb2))
+* update README.md ([8d00d51](https://github.com/FairJournal/file-system/commit/8d00d51a32c9380698365350ee4a8cc60c75f7f7))
+
 ## [1.10.0](https://github.com/FairJournal/file-system/compare/v1.9.2...v1.10.0) (2023-07-22)
 
 
