@@ -1,5 +1,6 @@
 import { signVerify, sign } from 'ton-crypto'
 import { Buffer } from 'buffer'
+import nacl from 'tweetnacl'
 
 /**
  * Meta information from data
@@ -118,7 +119,7 @@ export function personalSignVerify(data: string, signature: string, publicKey: s
   const checkData = Buffer.concat([
     Buffer.from([0xff, 0xff]),
     Buffer.from(TON_SAFE_SIGN_MAGIC),
-    Buffer.from(data, 'utf8'),
+    nacl.hash(Buffer.from(data, 'utf8')),
   ])
 
   return signVerify(checkData, Buffer.from(signature, 'hex'), Buffer.from(publicKey, 'hex'))

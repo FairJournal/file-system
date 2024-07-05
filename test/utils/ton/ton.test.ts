@@ -7,11 +7,11 @@ import {
 
 describe('TON Utils', () => {
   it('check personal signature', async () => {
-    const publicKey = 'd66401889725ada1f6ba8e78f67d24aec386341d8e3310f00ef64df463def1ef'
-    const data = 'Hello world!'
+    const publicKey = '23ea01332cd132cd427bbeada4e071682a0cbf3540ca8c0a6019ddf7bc494837'
+    const data = 'b8a514965e0277321d1773f79f6e8c4cbe67608f2b16934ecaa4cd8ef70f3c83'
     // signature created using Openmask
     const signature =
-      'efb732d1d06d12c7dc9d9e59aebf8bb3c03f081806f3e31cfe26a2263db9cd840b47bb70f915bb06f601d54ec75263f9b0e31ec0fde70ea11a0f2a2c9725200c'
+      '2727a41417cd8c4d98b4745bced775ce7ba3ea542f70a52e8e28401accf4679560a1f72861c40d7d4fef1905d0b2548cf1ad7939bccb1b510f1e802d3690f300'
     expect(personalSignVerify(data, signature, publicKey)).toBeTruthy()
   })
 
